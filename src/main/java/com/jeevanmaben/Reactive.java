@@ -38,6 +38,7 @@ public class Reactive {
 
     public static void dropStrategy(){
         System.out.println("Drop Strategy");
+        //async, not parallel, processing. Will drop messages if subscriber can not keep up with Publisher
         Flowable.<Integer>create(emitter -> emit(emitter), BackpressureStrategy.DROP)
                 .observeOn(Schedulers.computation(), true, 2)
                 .subscribe(msg -> process(msg));
@@ -45,7 +46,7 @@ public class Reactive {
     }
 
 
-    private static void  emit(FlowableEmitter<Integer> emitter){
+    private static void emit(FlowableEmitter<Integer> emitter){
         int count = 0;
         while (count < 10){
             count ++;
@@ -58,6 +59,7 @@ public class Reactive {
 
     private static void process(Integer msg){
         System.out.println("Subscriber " + msg);
+        //simulate computation process delay
         sleep(1000);
     }
 
